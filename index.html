@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florist Outerbloom - Full Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loginPage">
+        <div class="login-box" id="boxLogin">
+            <h2>FLORIST ACCESS</h2>
+            <p>Silakan masukkan akun Outerbloom Anda</p>
+            <div id="loginErr" style="color:red; font-size:13px; margin-bottom:10px;"></div>
+            <input type="text" id="userInput" placeholder="Username">
+            <input type="password" id="passInput" placeholder="Password">
+            <button class="btn-order" style="background: var(--primary);" onclick="handleLogin()">BUKA KOLEKSI</button>
+            
+            <div class="login-helper">
+                <a onclick="switchAuthForm('forgot')">Lupa Password?</a>
+                <a onclick="switchAuthForm('register')">Daftar Akun Baru</a>
+            </div>
+        </div>
+
+        <div class="login-box hidden" id="boxRegister">
+            <h2>DAFTAR AKUN</h2>
+            <p>Buat akun pelanggan Outerbloom Anda</p>
+            <div id="regErr" style="color:red; font-size:13px; margin-bottom:10px;"></div>
+            <input type="text" id="regUser" placeholder="Buat Username Baru">
+            <input type="password" id="regPass" placeholder="Buat Password Kuat">
+            <input type="password" id="regPassConfirm" placeholder="Konfirmasi Password">
+            <button class="btn-order" style="background: #3867d6;" onclick="handleRegister()">DAFTAR SEKARANG</button>
+            
+            <div class="login-helper" style="justify-content: center;">
+                <p style="margin: 5px 0 0 0; font-size:13px;">Sudah punya akun? <a onclick="switchAuthForm('login')">Login di sini</a></p>
+            </div>
+        </div>
+
+        <div class="login-box hidden" id="boxForgot">
+            <h2>LUPA PASSWORD</h2>
+            <p>Atur ulang kata sandi akun Anda</p>
+            <div id="forgotErr" style="color:red; font-size:13px; margin-bottom:10px;"></div>
+            <input type="text" id="forgotUser" placeholder="Masukkan Username Anda">
+            <input type="password" id="forgotNewPass" placeholder="Masukkan Password Baru">
+            <button class="btn-order" style="background: var(--admin-color);" onclick="handleForgotPassword()">PERBARUI PASSWORD</button>
+            
+            <div class="login-helper" style="justify-content: center;">
+                <p style="margin: 5px 0 0 0; font-size:13px;">Kembali ke halaman <a onclick="switchAuthForm('login')">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-text" style="font-size: 1.2rem;">MENU EXPLORE</span>
+            <i class="fa fa-times" onclick="closeNav()" style="cursor:pointer; font-size: 24px;"></i>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="filterData('all')">LIHAT SEMUA KOLEKSI</div>
+            <div class="sidebar-item" onclick="toggleSub()">KATEGORI BUNGA <i class="fa fa-chevron-down" style="float:right; font-size: 12px; margin-top:5px;"></i></div>
+            <div id="subBunga" class="sub-menu">
+                <div class="sub-item" onclick="filterData('edelweis')">Bunga Edelweis</div>
+                <div class="sub-item" onclick="filterData('kering')">Bunga Kering</div>
+                <div class="sub-item" onclick="filterData('mawar')">Mawar</div>
+                <div class="sub-item" onclick="filterData('tulip')">Tulip</div>
+            </div>
+            <div class="sidebar-item" onclick="openCartModal()">KERANJANG SAYA</div>
+            <div class="sidebar-item" onclick="scrollToId('tentang')">TENTANG KAMI</div>
+            <div class="sidebar-item" onclick="scrollToId('kontak')">KONTAK & LOKASI</div>
+            <div class="sidebar-item" onclick="handleLogout()" style="color: #ff4757; margin-top: 30px;">LOGOUT <i class="fa fa-sign-out-alt"></i></div>
+        </div>
+    </div>
+
+    <div id="mainWebsite" class="hidden">
+        <header>
+            <div class="nav-brand">
+                <i class="fa fa-bars menu-btn" onclick="openNav()"></i>
+                <div class="logo-text">Outerbloom</div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Cari bunga impianmu..." onkeyup="searchFlower()">
+                <i class="fa fa-search"></i>
+            </div>
+
+            <div class="nav-icons" onclick="openCartModal()">
+                <i class="fa fa-shopping-cart" style="cursor:pointer; font-size: 20px;"></i>
+                <span class="cart-badge" id="cartBadgeCount">0</span>
+            </div>
+        </header>
+
+        <section class="hero">
+            <h1 id="userGreet">Koleksi Bunga Terbaik</h1>
+            <div id="userRoleContainer"></div>
+        </section>
+
+        <div class="category-scroll">
+            <div class="cat-tag active" onclick="filterData('all', this)">Semua</div>
+            <div class="cat-tag" onclick="filterData('mawar', this)">Mawar</div>
+            <div class="cat-tag" onclick="filterData('edelweis', this)">Bunga Edelweis</div>
+            <div class="cat-tag" onclick="filterData('kering', this)">Bunga Kering</div>
+            <div class="cat-tag" onclick="filterData('tulip', this)">Tulip</div>
+        </div>
+
+        <div class="container">
+            <div id="adminPanel" class="admin-panel hidden">
+                <div>
+                    <h4 style="margin:0; color: var(--admin-color);"><i class="fa fa-user-shield"></i> Admin Workspace</h4>
+                    <small style="color:#777;">Anda memiliki akses penuh untuk mengelola inventaris.</small>
+                </div>
+                <button class="btn-order" style="background: var(--admin-color); width: auto; margin:0; padding: 8px 15px; font-size: 13px;" onclick="openProductModal()">
+                    <i class="fa fa-plus"></i> TAMBAH PRODUK BARU
+                </button>
+            </div>
+
+            <div class="grid" id="productGrid">
+            </div>
+        </div>
+
+        <div id="productModal" class="modal">
+            <div class="modal-body">
+                <i class="fa fa-times close-modal" onclick="closeProductModal()"></i>
+                <h3>Tambah Produk Baru</h3>
+                <form id="addProductForm" onsubmit="saveNewProduct(event)">
+                    <input type="text" id="prodName" placeholder="Nama Bunga (Contoh: Mawar Hitam Eksotis)" required>
+                    <input type="text" id="prodPrice" placeholder="Harga (Contoh: Rp 500.000)" required>
+                    
+                    <select id="prodCat" required style="background: white;">
+                        <option value="" disabled selected>Pilih Kategori Bunga</option>
+                        <option value="mawar">Mawar</option>
+                        <option value="edelweis">Bunga Edelweis</option>
+                        <option value="kering">Bunga Kering</option>
+                        <option value="tulip">Tulip</option>
+                    </select>
+
+                    <input type="url" id="prodImg" placeholder="Link URL Gambar (https://...)" required>
+                    <button type="submit" class="btn-order" style="background: var(--admin-color); margin-top: 10px;">
+                        <i class="fa fa-save"></i> SIMPAN PRODUK
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="cartModal" class="modal">
+            <div class="modal-body cart-box">
+                <i class="fa fa-times close-modal" onclick="closeCartModal()"></i>
+                <h3><i class="fa fa-shopping-cart"></i> Keranjang Belanja</h3>
+                <div class="cart-list" id="cartItemsList"></div>
+                <div class="cart-total-box">
+                    <span>Total Keseluruhan:</span>
+                    <span id="cartTotalPriceValue">Rp 0</span>
+                </div>
+                <button class="btn-order" style="background: #25d366;" onclick="checkoutWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> CHECKOUT KE WHATSAPP
+                </button>
+            </div>
+        </div>
+
+        <div class="footer-info" id="tentang">
+            <div>
+                <h3>Tentang Outerbloom</h3>
+                <p>Outerbloom menghadirkan rangkaian bunga segar pilihan untuk menyempurnakan setiap momen berharga Anda. Member of Class 19.1c.30 UBSI.</p>
+            </div>
+            <div id="kontak">
+                <h3>Hubungi Kami</h3>
+                <p><i class="fa fa-map-marker-alt"></i> Jl. Gajah Mada, Pontianak</p>
+                <p><i class="fa fa-phone"></i> +62 822 5349 2479</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Florist Pontianak - Kelompok 7</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
